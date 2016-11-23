@@ -2,4 +2,4 @@ function Superficial(Component) {
   return Component;
 }
 
-export default Superficial
+export default Superficial;
