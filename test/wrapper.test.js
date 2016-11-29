@@ -21,7 +21,13 @@ test('The intended hijack proof-of-concept works', (assert) => {
     return header;
   };
 
-  assert.equal(render(<Header />).html(), '<h1 style="0:stuff;1:nonsense;">Header</h1>');
-  assert.equal(render(<Wrapped />).html(), '<h1 style="margin:0 auto;">Header</h1>');
+  assert.equal(
+    render(<Header />).html(),
+    '<h1 style="0:stuff;1:nonsense;">Header</h1>',
+  );
+  assert.equal(
+    render(<Wrapped />).html(),
+    '<h1 style="margin:0 auto;">Header</h1>',
+  );
   assert.end();
 });
