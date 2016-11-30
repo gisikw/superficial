@@ -110,6 +110,7 @@ test('Stateless functions are supported', (assert) => {
 });
 
 test('React.createClass is supported', (assert) => {
+  // eslint-disable-next-line react/prefer-es6-class
   const FooComponent = React.createClass({
     render() {
       return (
@@ -117,7 +118,7 @@ test('React.createClass is supported', (assert) => {
           <h1 looks={this.looks.foo}>Test</h1>
         </div>
       );
-    }
+    },
   });
 
   FooComponent.looks = { foo: {
