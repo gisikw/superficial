@@ -6,6 +6,46 @@
 
 Superficial is a library for managing inline responsive styles with React.
 
+## Example
+
+```jsx
+import React from 'react';
+import Superficial from 'superficial';
+
+class MyComponent extends React.Component {
+  render() {
+    <div>
+      <h1 looks={this.looks.header}>
+        This is an example
+      </h1>
+    </div>
+  }
+}
+
+MyComponent.looks = {
+  header: {
+    400: {
+      margin: '0 auto',
+    },
+    600: {
+      margin: '30px auto',
+    }
+  }
+};
+
+export default Superficial(MyComponent);
+```
+
+```jsx
+<MyComponent width={500} />
+// Yields the following HTML:
+// <div>
+//   <h1 style="margin: 15px auto">
+//     This is an example
+//   </h1>
+// </div>
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/gisikw/superficial
