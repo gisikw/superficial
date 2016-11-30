@@ -4,5 +4,6 @@ plugins:
   - jsx-a11y
   - import
 rules:
-  react/jsx-filename-extension: 0
+  no-use-before-define: [2, { functions: false }]
   max-len: [2, 80]
+  react/jsx-filename-extension: 0

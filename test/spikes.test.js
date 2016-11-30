@@ -19,9 +19,6 @@ test('Components can specify looks inline', (assert) => {
           style={{ color: '#fcc' }}
         >
           This is a Foo Component
-          <button onClick={() => this.setState({ active: true })}>
-            Activate
-          </button>
         </div>
       );
     }
@@ -35,9 +32,25 @@ test('Components can specify looks inline', (assert) => {
   const Wrapped = Superficial(FooComponent);
   assert.equalsIgnoringWhitespace(
     render(<Wrapped />).html(),
-    `<div style="font-weight: bold; font-size: 16px; color: #fcc;">
+    `<div style="font-weight:bold; font-size:16px; color:#fcc;">
       This is a Foo Component
-      <button>Activate</button>
+    </div>`,
+  );
+
+  assert.end();
+});
+
+test('Components can specify looks on children', (assert) => {
+  class FooComponent extends React.Component {
+    render() { return <div><h1 looks={this.looks.foo}>Test</h1></div>; }
+  }
+  FooComponent.looks = { foo: { color: '#fcc' } };
+
+  const Wrapped = Superficial(FooComponent);
+  assert.equalsIgnoringWhitespace(
+    render(<Wrapped />).html(),
+    `<div>
+      <h1 style="color: #fcc;">Test</h1>
     </div>`,
   );
 
