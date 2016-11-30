@@ -12,16 +12,12 @@ const test = (name, cb) => tape(name, t =>
 
 test('Components can specify looks inline', (assert) => {
   class FooComponent extends React.Component {
-    constructor() {
-      super();
-      this.state = { active: false };
-    }
-
     render() {
-      const divLooks = [this.looks.container];
-      if (this.state.active) divLooks.push(this.looks.active);
       return (
-        <div looks={this.looks.container}>
+        <div
+          looks={[this.looks.foo, this.looks.bar]}
+          style={{ color: '#fcc' }}
+        >
           This is a Foo Component
           <button onClick={() => this.setState({ active: true })}>
             Activate
@@ -32,18 +28,14 @@ test('Components can specify looks inline', (assert) => {
   }
 
   FooComponent.looks = {
-    container: {
-      fontSize: '16px',
-    },
-    active: {
-      fontWeight: 'bold',
-    },
+    foo: { fontSize: '16px' },
+    bar: { fontWeight: 'bold' },
   };
 
   const Wrapped = Superficial(FooComponent);
   assert.equalsIgnoringWhitespace(
     render(<Wrapped />).html(),
-    `<div>
+    `<div style="font-weight: bold; font-size: 16px; color: #fcc;">
       This is a Foo Component
       <button>Activate</button>
     </div>`,
