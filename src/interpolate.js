@@ -81,4 +81,9 @@ function interpolateValues(a, b, x) {
           .join(' ');
 }
 
-export default node => transform({ t: node }).t;
+// FIXME: This has been muddied up to ensure the result is always a function.
+// Clean up the cruft to avoid the wrapping
+export default (node) => {
+  const result = transform({ t: node }).t;
+  return typeof result === 'function' ? result : () => result;
+};

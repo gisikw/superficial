@@ -3,7 +3,7 @@ import interpolate from '../src/interpolate';
 
 test('interpolate leaves plain object alone', (assert) => {
   const styles = { widget: { color: '#fff' } };
-  assert.deepEqual(interpolate(styles), styles);
+  assert.deepEqual(interpolate(styles)(), styles);
   assert.end();
 });
 

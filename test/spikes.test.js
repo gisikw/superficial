@@ -33,7 +33,7 @@ test('Components can specify looks inline', (assert) => {
   const Wrapped = Superficial(FooComponent);
   assert.equalsIgnoringWhitespace(
     render(<Wrapped />).html(),
-    `<div style="font-weight:bold; font-size:16px; color:#fcc;" class="test">
+    `<div style="font-size: 16px; font-weight:bold; color:#fcc;" class="test">
       This is a Foo Component
     </div>`,
   );
