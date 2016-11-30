@@ -85,3 +85,53 @@ test('Components support interpolated styles', (assert) => {
 
   assert.end();
 });
+
+test('Stateless functions are supported', (assert) => {
+  const FooComponent = (_, looks) => (
+    <div>
+      <h1 looks={looks.foo}>Test</h1>
+    </div>
+  );
+
+  FooComponent.looks = { foo: {
+    0: { margin: '0 auto' },
+    2: { margin: '10px auto' },
+  } };
+
+  const Wrapped = Superficial(FooComponent);
+  assert.equalsIgnoringWhitespace(
+    render(<Wrapped width={1} />).html(),
+    `<div>
+      <h1 style="margin: 5px auto;">Test</h1>
+    </div>`,
+  );
+
+  assert.end();
+});
+
+test('React.createClass is supported', (assert) => {
+  const FooComponent = React.createClass({
+    render() {
+      return (
+        <div>
+          <h1 looks={this.looks.foo}>Test</h1>
+        </div>
+      );
+    }
+  });
+
+  FooComponent.looks = { foo: {
+    0: { margin: '0 auto' },
+    2: { margin: '10px auto' },
+  } };
+
+  const Wrapped = Superficial(FooComponent);
+  assert.equalsIgnoringWhitespace(
+    render(<Wrapped width={1} />).html(),
+    `<div>
+      <h1 style="margin: 5px auto;">Test</h1>
+    </div>`,
+  );
+
+  assert.end();
+});

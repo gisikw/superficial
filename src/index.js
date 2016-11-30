@@ -2,10 +2,10 @@ import React from 'react';
 import interpolate from './interpolate';
 
 function Superficial(Component) {
-  // Punt on stateless components for now
   if (!Component.render &&
       !(Component.prototype && Component.prototype.render)) {
-    return Component;
+    return props =>
+      lookify(Component(props, Component.looks), props.width);
   }
 
   class Enhanced extends Component {
