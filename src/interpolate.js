@@ -1,4 +1,4 @@
-const STATIC_VALUES = ['auto'];
+const STATIC_VALUES = ['auto', 'none', 'inherit'];
 const SUPPORTED_UNITS = [
   'em', 'ex', 'rem', '%', 'px', 'vh', 'vw', 'vmin', 'vmax',
 ];

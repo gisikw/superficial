@@ -68,10 +68,11 @@ test('interpolate supports CSS shorthand properties', (assert) => {
   assert.end();
 });
 
-test('interpolate allows "auto" in CSS shorthand', (assert) => {
+test('interpolate allows keyword values in CSS shorthand properties', (assert) => {
   const style = interpolate({
-    0: { margin: '10px auto' }, 2: { margin: '20px auto' },
+    0: { margin: '10px auto none inherit' },
+    2: { margin: '20px auto none inherit' },
   });
-  assert.deepEqual(style(1), { margin: '15px auto' });
+  assert.deepEqual(style(1), { margin: '15px auto none inherit' });
   assert.end();
 });
