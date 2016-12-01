@@ -9,11 +9,10 @@ const unitPattern =
   })?$`);
 
 function transform(node) {
-  if (typeof node !== 'object') return node;
   return Object.keys(node).reduce((h, key) => (
     Object.assign({}, h, {
       [key]: isGeneric(node[key])
-        ? transform(node[key])
+        ? node[key]
         : makeResolver(node[key]) })
   ), {});
 }
@@ -36,34 +35,46 @@ function isNumeric(s) {
 }
 
 function makeResolver(node) {
-  const [generics, dynamics] = partition(node);
-  const doMerge = (typeof dynamics[Object.keys(dynamics)[0]] === 'object');
-  const bounds =
-    Object.keys(dynamics).map(k => parseInt(k, 10)).sort((a, b) => a - b);
   return (v = 0) => {
-    if (dynamics[v]) {
-      return doMerge ? Object.assign({}, generics, dynamics[v]) : dynamics[v];
-    }
-    let interpolated;
-    if (v < bounds[0]) {
-      interpolated = dynamics[bounds[0]];
-    } else if (v > bounds[bounds.length - 1]) {
-      interpolated = dynamics[bounds[bounds.length - 1]];
-    } else {
-      const upperBound = bounds.find(b => b > v);
-      const lowerBound = bounds[bounds.indexOf(upperBound) - 1];
-      const delta = (v - lowerBound) / (upperBound - lowerBound);
-      interpolated = doMerge
-        ? interpolate(dynamics[lowerBound], dynamics[upperBound], delta)
-        : interpolateValues(dynamics[lowerBound], dynamics[upperBound], delta);
-    }
-    return doMerge ? Object.assign({}, generics, interpolated) : interpolated;
+    const expanded = expandRules(node);
+    Object.keys(expanded).forEach((key) => {
+      if (typeof expanded[key] === 'object') {
+        const bounds =
+          Object.keys(expanded[key]).map(k =>
+            parseInt(k, 10)).sort((a, b) => a - b);
+        if (v < bounds[0]) {
+          expanded[key] = expanded[key][bounds[0]];
+        } else if (v > bounds[bounds.length - 1]) {
+          expanded[key] = expanded[key][bounds[bounds.length - 1]];
+        } else {
+          const upperBound = bounds.find(b => b > v);
+          const lowerBound = bounds[bounds.indexOf(upperBound) - 1];
+          const delta = (v - lowerBound) / (upperBound - lowerBound);
+          expanded[key] = interpolateValues(
+            expanded[key][lowerBound],
+            expanded[key][upperBound],
+            delta,
+          );
+        }
+      }
+    });
+    return expanded;
   };
 }
 
-function interpolate(a, b, x) {
-  return Object.keys(a).reduce((h, key) =>
-    Object.assign({}, h, { [key]: interpolateValues(a[key], b[key], x) }), {});
+function expandRules(rules) {
+  return Object.keys(rules).reduce((o, key) => {
+    if (isNumeric(key)) {
+      return Object.assign({}, o,
+        ...Object.keys(rules[key]).map(prop => ({
+          [prop]: Object.assign({}, o[prop], {
+            [key]: rules[key][prop],
+          }),
+        })),
+      );
+    }
+    return Object.assign({}, o, { [key]: rules[key] });
+  }, {});
 }
 
 function interpolateValues(a, b, x) {

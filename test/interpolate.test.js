@@ -76,3 +76,16 @@ test('interpolate allows keyword values in CSS shorthand', (assert) => {
   assert.deepEqual(style(1), { margin: '15px auto none inherit' });
   assert.end();
 });
+
+test('interpolate allows selective properties in breakpoints', (assert) => {
+  const style = interpolate({
+    0: { margin: '0px' },
+    10: { fontSize: '10px' },
+    20: { margin: '20px', fontSize: '20px' },
+  });
+  assert.deepEqual(style(15), {
+    margin: '15px',
+    fontSize: '15px',
+  });
+  assert.end();
+});
