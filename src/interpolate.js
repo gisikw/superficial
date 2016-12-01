@@ -3,65 +3,37 @@ const SUPPORTED_UNITS = [
   'em', 'ex', 'rem', '%', 'px', 'vh', 'vw', 'vmin', 'vmax',
 ];
 
-const unitPattern =
+const UNIT_PATTERN =
   new RegExp(`^(\\d+)(?:\\.\\d+)?(${
     SUPPORTED_UNITS.map(u => `(${u})`).join('|')
   })?$`);
 
-function transform(node) {
-  return Object.keys(node).reduce((h, key) => (
-    Object.assign({}, h, {
-      [key]: isGeneric(node[key])
-        ? node[key]
-        : makeResolver(node[key]) })
-  ), {});
+function interpolate(rules, width) {
+  return Object.assign({}, rules, ...Object.keys(rules).map((key) => {
+    // Do not override for non-object CSS values
+    if (typeof rules[key] !== 'object') return null;
+
+    const bounds = sortedBounds(rules[key]);
+    // Use the smallest breakpoint value if below
+    if (width < bounds[0]) return { [key]: rules[key][bounds[0]] };
+
+    // Use the largest breakpoint value if below
+    if (width > bounds[bounds.length - 1]) {
+      return { [key]: rules[key][bounds[bounds.length - 1]] };
+    }
+
+    // Interpolate values between the nearest neighbors
+    const upperBound = bounds.find(b => b > width);
+    const lowerBound = bounds[bounds.indexOf(upperBound) - 1];
+    return { [key]: interpolateValues(
+      rules[key][lowerBound],
+      rules[key][upperBound],
+      (width - lowerBound) / (upperBound - lowerBound),
+    ) };
+  }));
 }
 
-function isGeneric(node) {
-  return typeof node !== 'object' || !Object.keys(partition(node)[1]).length;
-}
-
-function partition(node) {
-  return Object.keys(node).reduce((a, key) => {
-    const r = [];
-    r[0] = a[0];
-    r[1] = a[1];
-    r[isNumeric(key) ? 1 : 0][key] = node[key]; return r;
-  }, [{}, {}]);
-}
-
-function isNumeric(s) {
-  return !isNaN(parseFloat(s)) && isFinite(s);
-}
-
-function makeResolver(node) {
-  return (v = 0) => {
-    const expanded = expandRules(node);
-    Object.keys(expanded).forEach((key) => {
-      if (typeof expanded[key] === 'object') {
-        const bounds =
-          Object.keys(expanded[key]).map(k =>
-            parseInt(k, 10)).sort((a, b) => a - b);
-        if (v < bounds[0]) {
-          expanded[key] = expanded[key][bounds[0]];
-        } else if (v > bounds[bounds.length - 1]) {
-          expanded[key] = expanded[key][bounds[bounds.length - 1]];
-        } else {
-          const upperBound = bounds.find(b => b > v);
-          const lowerBound = bounds[bounds.indexOf(upperBound) - 1];
-          const delta = (v - lowerBound) / (upperBound - lowerBound);
-          expanded[key] = interpolateValues(
-            expanded[key][lowerBound],
-            expanded[key][upperBound],
-            delta,
-          );
-        }
-      }
-    });
-    return expanded;
-  };
-}
-
+// Split out grouped breakpoint rules into individual properties
 function expandRules(rules) {
   return Object.keys(rules).reduce((o, key) => {
     if (isNumeric(key)) {
@@ -79,9 +51,9 @@ function expandRules(rules) {
 
 function interpolateValues(a, b, x) {
   if (isNumeric(a) && isNumeric(b)) return a + ((b - a) * x);
-  const unitMatch = a.match(unitPattern);
+  const unitMatch = a.match(UNIT_PATTERN);
   if (unitMatch) {
-    const unit = unitMatch[2] || b.match(unitPattern)[2] || '';
+    const unit = unitMatch[2] || b.match(UNIT_PATTERN)[2] || '';
     const aFloat = parseFloat(a);
     return (aFloat + ((parseFloat(b) - aFloat) * x)) + unit;
   }
@@ -92,9 +64,12 @@ function interpolateValues(a, b, x) {
           .join(' ');
 }
 
-// FIXME: This has been muddied up to ensure the result is always a function.
-// Clean up the cruft to avoid the wrapping
-export default (node) => {
-  const result = transform({ t: node }).t;
-  return typeof result === 'function' ? result : () => result;
-};
+function isNumeric(s) {
+  return !isNaN(parseFloat(s)) && isFinite(s);
+}
+
+function sortedBounds(obj) {
+  return Object.keys(obj).map(k => parseInt(k, 10)).sort((a, b) => a - b);
+}
+
+export default node => (width = 0) => interpolate(expandRules(node), width);

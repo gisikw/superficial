@@ -2,7 +2,7 @@ import test from 'tape';
 import interpolate from '../src/interpolate';
 
 test('interpolate leaves plain object alone', (assert) => {
-  const styles = { widget: { color: '#fff' } };
+  const styles = { color: '#fff' };
   assert.deepEqual(interpolate(styles)(), styles);
   assert.end();
 });
@@ -87,5 +87,13 @@ test('interpolate allows selective properties in breakpoints', (assert) => {
     margin: '15px',
     fontSize: '15px',
   });
+  assert.end();
+});
+
+test('interpolate allows specifying breakpoints as properties', (assert) => {
+  const style = interpolate({
+    margin: { 0: '0px', 20: '20px' },
+  });
+  assert.deepEqual(style(15), { margin: '15px' });
   assert.end();
 });
