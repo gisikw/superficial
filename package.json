@@ -1,6 +1,6 @@
 {
   "name": "superficial",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library for managing inline responsive styles with React",
   "main": "dist/index.js",
   "repository": {
