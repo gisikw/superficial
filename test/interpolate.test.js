@@ -17,6 +17,7 @@ test('interpolate generates functions from tweenable styles', (assert) => {
   assert.deepEqual(style(0), { color: '#fff', lineHeight: 1 });
   assert.deepEqual(style(200), { color: '#fff', lineHeight: 1.5 });
   assert.deepEqual(style(400), { color: '#fff', lineHeight: 7 });
+  assert.deepEqual(style(500), { color: '#fff', lineHeight: 12 });
   assert.deepEqual(style(600), { color: '#fff', lineHeight: 12 });
   assert.end();
 });
