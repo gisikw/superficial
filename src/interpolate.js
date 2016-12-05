@@ -34,7 +34,7 @@ function interpolate(rules, width) {
 }
 
 // Split out grouped breakpoint rules into individual properties
-function expandRules(rules) {
+export function expandRules(rules) {
   return Object.keys(rules).reduce((o, key) => {
     if (isNumeric(key)) {
       return Object.assign({}, o,
