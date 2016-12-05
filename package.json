@@ -2,7 +2,6 @@
   "name": "superficial",
   "version": "0.1.2",
   "description": "A library for managing inline responsive styles with React",
-  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/gisikw/superficial.git"
@@ -12,7 +11,7 @@
   "scripts": {
     "test": "babel-tap test/**/*.js",
     "test:coverage": "babel-tap --cov --coverage-report=lcov test/**/*.js",
-    "build": "babel src --presets babel-preset-es2015 --out-dir dist",
+    "build": "babel src --presets babel-preset-es2015 --out-dir .",
     "prepublish": "npm run build",
     "lint": "eslint src test"
   },
