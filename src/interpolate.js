@@ -15,10 +15,10 @@ function interpolate(rules, width) {
 
     const bounds = sortedBounds(rules[key]);
     // Use the smallest breakpoint value if below
-    if (width < bounds[0]) return { [key]: rules[key][bounds[0]] };
+    if (width <= bounds[0]) return { [key]: rules[key][bounds[0]] };
 
     // Use the largest breakpoint value if below
-    if (width > bounds[bounds.length - 1]) {
+    if (width >= bounds[bounds.length - 1]) {
       return { [key]: rules[key][bounds[bounds.length - 1]] };
     }
 
