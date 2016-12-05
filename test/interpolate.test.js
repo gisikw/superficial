@@ -1,5 +1,5 @@
 import test from 'tape';
-import interpolate from '../src/interpolate';
+import interpolate, { expandLookRules } from '../src/interpolate';
 
 test('interpolate leaves plain object alone', (assert) => {
   const styles = { color: '#fff' };
@@ -95,5 +95,19 @@ test('interpolate allows specifying breakpoints as properties', (assert) => {
     margin: { 0: '0px', 20: '20px' },
   });
   assert.deepEqual(style(15), { margin: '15px' });
+  assert.end();
+});
+
+test('expandLookRules flattens grouped looks', (assert) => {
+  const rules = {
+    margin: { 100: 100, 200: 200 },
+    100: { width: 100, height: 100 },
+    200: { width: 200, height: 200 },
+  };
+  assert.deepEqual(expandLookRules(rules), {
+    margin: { 100: 100, 200: 200 },
+    width: { 100: 100, 200: 200 },
+    height: { 100: 100, 200: 200 },
+  });
   assert.end();
 });

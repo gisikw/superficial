@@ -34,7 +34,7 @@ function interpolate(rules, width) {
 }
 
 // Split out grouped breakpoint rules into individual properties
-export function expandRules(rules) {
+export function expandLookRules(rules) {
   return Object.keys(rules).reduce((o, key) => {
     if (isNumeric(key)) {
       return Object.assign({}, o,
@@ -64,12 +64,10 @@ function interpolateValues(a, b, x) {
           .join(' ');
 }
 
-function isNumeric(s) {
-  return !isNaN(parseFloat(s)) && isFinite(s);
-}
+function isNumeric(s) { return !isNaN(parseFloat(s)) && isFinite(s); }
 
 function sortedBounds(obj) {
   return Object.keys(obj).map(k => parseInt(k, 10)).sort((a, b) => a - b);
 }
 
-export default node => (width = 0) => interpolate(expandRules(node), width);
+export default node => (width = 0) => interpolate(expandLookRules(node), width);
