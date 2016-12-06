@@ -9,7 +9,7 @@ function applyStyles(renderedComponent, width) {
   }
 
   // Stop recursing when we reach the bottom of child components
-  if (!renderedComponent.props) return renderedComponent;
+  if (!renderedComponent || !renderedComponent.props) return renderedComponent;
 
   return Object.assign({}, renderedComponent, {
     props: buildRenderedProps(renderedComponent, width),
