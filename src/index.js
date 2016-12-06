@@ -4,11 +4,23 @@ import wrapRendered from './wrapRendered';
 function Superficial(component) {
   if (isStateless(component)) {
     return props =>
-      wrapRendered(component(props, component.looks), props.width);
+      wrapRendered(
+        component(
+          props,
+          Object.assign({}, component.looks, props.__looksOverride),
+        ),
+        props.width,
+      );
   }
 
   class Enhanced extends component {
-    render() { return wrapRendered(super.render(), this.props.width); }
+    render() {
+      if (this.props.__looksOverride) {
+        this.looks =
+          Object.assign({}, component.looks, this.props.__looksOverride);
+      }
+      return wrapRendered(super.render(), this.props.width);
+    }
   }
   Enhanced.propTypes = { width: React.PropTypes.number };
   Enhanced.prototype.looks = component.looks;
