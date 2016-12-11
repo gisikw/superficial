@@ -9,8 +9,8 @@
   "homepage": "https://github.com/gisikw/superficial",
   "bugs": "https://github.com/gisikw/superficial/issues",
   "scripts": {
-    "test": "babel-tap test/**/*.js",
-    "test:coverage": "babel-tap --cov --coverage-report=lcov test/**/*.js",
+    "test": "babel-tap 'test/**/*.js'",
+    "test:coverage": "babel-tap --cov --coverage-report=lcov 'test/**/*.js'",
     "build": "babel src --presets babel-preset-es2015 --out-dir .",
     "prepublish": "npm run build",
     "lint": "eslint src test"
