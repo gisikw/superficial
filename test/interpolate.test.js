@@ -99,6 +99,15 @@ test('interpolate allows specifying breakpoints as properties', (assert) => {
   assert.end();
 });
 
+test('interpolate rounds fractional values to the nearest tenth', (assert) => {
+  const style = interpolate({
+    margin: { 0: '1px', 3: '2px' },
+    padding: { 0: 1, 3: 2 },
+  });
+  assert.deepEqual(style(1), { margin: '1.3px', padding: 1.3 });
+  assert.end();
+});
+
 test('expandLookRules flattens grouped looks', (assert) => {
   const rules = {
     margin: { 100: 100, 200: 200 },

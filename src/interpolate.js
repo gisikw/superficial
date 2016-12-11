@@ -1,8 +1,8 @@
+const PRECISION = 10;
 const STATIC_VALUES = ['auto', 'none', 'inherit'];
 const SUPPORTED_UNITS = [
   'em', 'ex', 'rem', '%', 'px', 'vh', 'vw', 'vmin', 'vmax',
 ];
-
 const UNIT_PATTERN =
   new RegExp(`^(\\d+)(?:\\.\\d+)?(${
     SUPPORTED_UNITS.map(u => `(${u})`).join('|')
@@ -50,12 +50,12 @@ export function expandLookRules(rules) {
 }
 
 function interpolateValues(a, b, x) {
-  if (isNumeric(a) && isNumeric(b)) return a + ((b - a) * x);
+  if (isNumeric(a) && isNumeric(b)) return round(a + ((b - a) * x));
   const unitMatch = a.match(UNIT_PATTERN);
   if (unitMatch) {
     const unit = unitMatch[2] || b.match(UNIT_PATTERN)[2] || '';
     const aFloat = parseFloat(a);
-    return (aFloat + ((parseFloat(b) - aFloat) * x)) + unit;
+    return round(aFloat + ((parseFloat(b) - aFloat) * x)) + unit;
   }
   if (STATIC_VALUES.indexOf(a) !== -1) return a;
   const bTokens = b.split(/\s+/);
@@ -65,6 +65,8 @@ function interpolateValues(a, b, x) {
 }
 
 function isNumeric(s) { return !isNaN(parseFloat(s)) && isFinite(s); }
+
+function round(n) { return Math.round(n * PRECISION) / PRECISION; }
 
 function sortedBounds(obj) {
   return Object.keys(obj).map(k => parseInt(k, 10)).sort((a, b) => a - b);
