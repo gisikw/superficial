@@ -1,14 +1,7 @@
-import tape from 'tape';
+import test from 'tape';
 import React from 'react';
 import { shallow } from 'enzyme';
-import Superficial from '../src';
-
-const test = (name, cb) => tape(name, t =>
-  cb(Object.assign({}, t, {
-    equalsIgnoringWhitespace: (a, b) =>
-      t.equals(a.replace(/\s/g, ''), b.replace(/\s/g, '')),
-  })),
-);
+import superficial from '../src';
 
 test('Components can specify looks inline', (assert) => {
   class FooComponent extends React.Component {
@@ -22,7 +15,7 @@ test('Components can specify looks inline', (assert) => {
     }
   }
   FooComponent.looks = { foo: { fontSize: '16px' }, bar: { color: '#fcc' } };
-  const Component = Superficial(FooComponent);
+  const Component = superficial(FooComponent);
   const wrapped = shallow(<Component />);
   const renderedStyle = wrapped.find('#test').prop('style');
   assert.deepEqual(
@@ -37,7 +30,7 @@ test('Components can specify looks on children', (assert) => {
     render() { return <div><h1 looks={this.looks.foo}>Test</h1></div>; }
   }
   FooComponent.looks = { foo: { color: '#fcc' } };
-  const Component = Superficial(FooComponent);
+  const Component = superficial(FooComponent);
   const wrapped = shallow(<Component />);
   assert.equal(wrapped.find('h1').prop('style').color, '#fcc');
   assert.end();
@@ -58,7 +51,7 @@ test('Components support interpolated styles', (assert) => {
     0: { margin: '0 auto' },
     2: { margin: '10px auto' },
   } };
-  const Component = Superficial(FooComponent);
+  const Component = superficial(FooComponent);
   const wrapped = shallow(<Component width={1} />);
   assert.equal(wrapped.find('h1').prop('style').margin, '5px auto');
   assert.end();
@@ -70,7 +63,7 @@ test('Stateless functions are supported', (assert) => {
     0: { margin: '0 auto' },
     2: { margin: '10px auto' },
   } };
-  const Component = Superficial(FooComponent);
+  const Component = superficial(FooComponent);
   const wrapped = shallow(<Component width={1} />);
   assert.equal(wrapped.find('h1').prop('style').margin, '5px auto');
   assert.end();
@@ -85,8 +78,19 @@ test('React.createClass is supported', (assert) => {
     0: { margin: '0 auto' },
     2: { margin: '10px auto' },
   } };
-  const Component = Superficial(FooComponent);
+  const Component = superficial(FooComponent);
   const wrapped = shallow(<Component width={1} />);
   assert.equal(wrapped.find('h1').prop('style').margin, '5px auto');
+  assert.end();
+});
+
+test('Enhanced component uses displayName where possible', (assert) => {
+  // eslint-disable-next-line react/prefer-stateless-function
+  class FooComponent extends React.Component {
+    render() { return <div />; }
+  }
+  const Component = superficial(FooComponent);
+  const wrapped = shallow(<div><Component width={1} /></div>);
+  assert.ok(wrapped.find('FooComponent').length);
   assert.end();
 });

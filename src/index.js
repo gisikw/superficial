@@ -3,7 +3,7 @@ import wrapRendered from './wrapRendered';
 
 function Superficial(component) {
   if (isStateless(component)) {
-    return props =>
+    const wrapper = props =>
       wrapRendered(
         component(
           props,
@@ -11,6 +11,8 @@ function Superficial(component) {
         ),
         props.width,
       );
+    wrapper.displayName = component.displayName || component.name;
+    return wrapper;
   }
 
   class Enhanced extends component {
@@ -24,6 +26,7 @@ function Superficial(component) {
   }
   Enhanced.propTypes = { width: React.PropTypes.number };
   Enhanced.prototype.looks = component.looks;
+  Enhanced.displayName = component.displayName || component.name;
   return Enhanced;
 }
 
