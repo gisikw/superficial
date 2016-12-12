@@ -1,50 +1,78 @@
-[![Build Status](https://travis-ci.org/gisikw/superficial.svg?branch=master)](https://travis-ci.org/gisikw/superficial)
-[![Test Coverage](https://codeclimate.com/github/gisikw/superficial/badges/coverage.svg)](https://codeclimate.com/github/gisikw/superficial/coverage)
-[![Code Climate](https://codeclimate.com/github/gisikw/superficial/badges/gpa.svg)](https://codeclimate.com/github/gisikw/superficial)
-[![NPM Version](https://img.shields.io/npm/v/superficial.svg)](https://www.npmjs.com/package/superficial)
+[![Travis Status][trav_img]][trav_site]
+[![Test Coverage][cov_img]][cov_site]
+[![Code Climate][code_img]][code_site]
+[![NPM Package][npm_img]][npm_site]
 
 # Superficial
 
-Superficial is a library for managing inline responsive styles with React.
+```
+npm install superficial
+```
 
-## Example
+A library for managing responsive inline styles on React components.
+
+Superficial allows you to define CSS rules at explicit widths. It automatically
+generates the values in-between!
+
+## Usage
+
+Superficial allows you to define "looks" that are applied to parts of your
+components. These looks behave like CSS blocks, except you can specify values
+for explicit widths. Wrap your component with `superficial()` before you export
+it, and pass in a `width` prop. Superficial will calculate the right CSS
+attributes for whatever width you provide!
 
 ```jsx
 import React from 'react';
-import Superficial from 'superficial';
+import superficial from 'superficial';
 
 class MyComponent extends React.Component {
   render() {
-    <div>
-      <h1 looks={this.looks.header}>
-        This is an example
+    return (
+      <h1 looks={[this.looks.header, this.looks.base]}>
+        Let's Be Superficial!
       </h1>
-    </div>
+    );
   }
 }
 
 MyComponent.looks = {
   header: {
-    400: {
-      margin: '0 auto',
+    // We want the font-size to be 12px when the component is 200 pixels wide,
+    // but 20px when the component is 400 pixels wide.
+    fontSize: { 200: '12px', 400: '20px' },
+  },
+
+  base: {
+    // You can also group properties by specifying the width first
+    200: {
+      margin: '0px auto',
+      padding: '16px 12px 4px',
     },
-    600: {
-      margin: '30px auto',
-    }
-  }
+    400: {
+      margin: '16px auto',
+      padding: '8px 18px 14px',
+    },
+  },
 };
 
-export default Superficial(MyComponent);
+export default superficial(MyComponent);
 ```
 
+In this example, we specified CSS properties for when the component is 200px
+wide and 400px wide. But if we pass it an intermediary value, it computes the
+values for us!
+
 ```jsx
-<MyComponent width={500} />
-// Yields the following HTML:
-// <div>
-//   <h1 style="margin: 15px auto">
-//     This is an example
-//   </h1>
-// </div>
+<MyComponent width={300} />
+```
+
+The resulting HTML looks like this:
+
+```html
+<h1 style="font-size: 16px; margin: 8px auto; padding: 12px 15px 9px">
+  Let's Be Superficial!
+</h1>
 ```
 
 ## Contributing
@@ -54,3 +82,12 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/gisikw
 ## License
 
 The library is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+[trav_img]: https://api.travis-ci.org/gisikw/superficial.svg
+[trav_site]: https://travis-ci.org/gisikw/superficial
+[cov_img]: https://codeclimate.com/github/gisikw/superficial/badges/coverage.svg
+[cov_site]: https://codeclimate.com/github/gisikw/superficial/coverage
+[code_img]: https://codeclimate.com/github/gisikw/superficial/badges/gpa.svg
+[code_site]: https://codeclimate.com/github/gisikw/superficial
+[npm_img]: https://img.shields.io/npm/v/superficial.svg
+[npm_site]: https://www.npmjs.com/package/superficial
