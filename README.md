@@ -82,7 +82,8 @@ The resulting HTML looks like this:
 Writing style rules in terms of the component width is useful, but how do you
 determine the width to begin with?
 
-You may wish to compute widths inside a parent component, as in the following example:
+You may wish to compute widths inside a parent component, as in the following
+example:
 
 ```jsx
 function SideBySide(props) {
@@ -93,7 +94,9 @@ function SideBySide(props) {
 }
 ```
 
-Superficial also provides a small DocumentListener component that will automatically pass down the browser width to its children (and listen for any resizing). You can use it like this:
+Superficial also provides a small `<DocumentListener />` component that will
+automatically pass down the browser width to its children (and listen for any
+resizing). You can use it like this:
 
 ```jsx
 ReactDOM.render(
@@ -104,16 +107,18 @@ ReactDOM.render(
 );
 ```
 
-Now your App component will have a width property that matches the clientWidth
-of the browser page.
+Now your `App` component will have a width property that matches the
+`clientWidth` of the browser page.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/gisikw/superficial
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/gisikw/superficial
 
 ## License
 
-The library is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The library is available as open source under the terms of the [MIT
+License](http://opensource.org/licenses/MIT).
 
 [trav_img]: https://api.travis-ci.org/gisikw/superficial.svg
 [trav_site]: https://travis-ci.org/gisikw/superficial
