@@ -12,9 +12,9 @@ test('Stateless components will merge a _looksOverride prop', (assert) => {
   FooComponent.looks = { foo: { color: 'green' }, bar: { color: 'blue' } };
   const Component = Superficial(FooComponent);
   const overrides = { bar: { color: 'red' } };
-  const wrapped = shallow(<Component __looksOverride={overrides} />);
-  assert.equal(wrapped.find('#inner').prop('style').color, 'red');
-  assert.equal(wrapped.find('#outer').prop('style').color, 'green');
+  const wrapper = shallow(<Component __looksOverride={overrides} />);
+  assert.equal(wrapper.find('#inner').prop('style').color, 'red');
+  assert.equal(wrapper.find('#outer').prop('style').color, 'green');
   assert.end();
 });
 
@@ -31,8 +31,8 @@ test('Stateful components will merge a _looksOverride prop', (assert) => {
   FooComponent.looks = { foo: { color: 'green' }, bar: { color: 'blue' } };
   const Component = Superficial(FooComponent);
   const overrides = { bar: { color: 'red' } };
-  const wrapped = shallow(<Component __looksOverride={overrides} />);
-  assert.equal(wrapped.find('#inner').prop('style').color, 'red');
-  assert.equal(wrapped.find('#outer').prop('style').color, 'green');
+  const wrapper = shallow(<Component __looksOverride={overrides} />);
+  assert.equal(wrapper.find('#inner').prop('style').color, 'red');
+  assert.equal(wrapper.find('#outer').prop('style').color, 'green');
   assert.end();
 });

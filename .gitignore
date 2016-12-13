@@ -2,6 +2,4 @@
 coverage
 node_modules
 npm-debug.log
-index.js
-wrapRendered.js
-interpolate.js
+dist

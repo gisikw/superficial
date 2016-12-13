@@ -1,5 +1,6 @@
 import test from 'tape';
-import interpolate, { expandLookRules } from '../src/interpolate';
+import { interpolate } from '../src';
+import { expandLookRules } from '../src/interpolate';
 
 test('interpolate leaves plain object alone', (assert) => {
   const styles = { color: '#fff' };

@@ -16,8 +16,8 @@ test('Components can specify looks inline', (assert) => {
   }
   FooComponent.looks = { foo: { fontSize: '16px' }, bar: { color: '#fcc' } };
   const Component = superficial(FooComponent);
-  const wrapped = shallow(<Component />);
-  const renderedStyle = wrapped.find('#test').prop('style');
+  const wrapper = shallow(<Component />);
+  const renderedStyle = wrapper.find('#test').prop('style');
   assert.deepEqual(
     renderedStyle,
     { color: '#fcc', fontWeight: 'bold', fontSize: '16px' },
@@ -31,8 +31,8 @@ test('Components can specify looks on children', (assert) => {
   }
   FooComponent.looks = { foo: { color: '#fcc' } };
   const Component = superficial(FooComponent);
-  const wrapped = shallow(<Component />);
-  assert.equal(wrapped.find('h1').prop('style').color, '#fcc');
+  const wrapper = shallow(<Component />);
+  assert.equal(wrapper.find('h1').prop('style').color, '#fcc');
   assert.end();
 });
 
@@ -52,8 +52,8 @@ test('Components support interpolated styles', (assert) => {
     2: { margin: '10px auto' },
   } };
   const Component = superficial(FooComponent);
-  const wrapped = shallow(<Component width={1} />);
-  assert.equal(wrapped.find('h1').prop('style').margin, '5px auto');
+  const wrapper = shallow(<Component width={1} />);
+  assert.equal(wrapper.find('h1').prop('style').margin, '5px auto');
   assert.end();
 });
 
@@ -64,8 +64,8 @@ test('Stateless functions are supported', (assert) => {
     2: { margin: '10px auto' },
   } };
   const Component = superficial(FooComponent);
-  const wrapped = shallow(<Component width={1} />);
-  assert.equal(wrapped.find('h1').prop('style').margin, '5px auto');
+  const wrapper = shallow(<Component width={1} />);
+  assert.equal(wrapper.find('h1').prop('style').margin, '5px auto');
   assert.end();
 });
 
@@ -79,8 +79,8 @@ test('React.createClass is supported', (assert) => {
     2: { margin: '10px auto' },
   } };
   const Component = superficial(FooComponent);
-  const wrapped = shallow(<Component width={1} />);
-  assert.equal(wrapped.find('h1').prop('style').margin, '5px auto');
+  const wrapper = shallow(<Component width={1} />);
+  assert.equal(wrapper.find('h1').prop('style').margin, '5px auto');
   assert.end();
 });
 
@@ -90,7 +90,7 @@ test('Enhanced component uses displayName where possible', (assert) => {
     render() { return <div />; }
   }
   const Component = superficial(FooComponent);
-  const wrapped = shallow(<div><Component width={1} /></div>);
-  assert.ok(wrapped.find('FooComponent').length);
+  const wrapper = shallow(<div><Component width={1} /></div>);
+  assert.ok(wrapper.find('FooComponent').length);
   assert.end();
 });

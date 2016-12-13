@@ -1,5 +1,7 @@
 import React from 'react';
 import wrapRendered from './wrapRendered';
+import interpolate from './interpolate';
+import DocumentListener from './DocumentListener';
 
 function Superficial(component) {
   if (isStateless(component)) {
@@ -36,3 +38,4 @@ function isStateless(component) {
 }
 
 export default Superficial;
+export { interpolate, DocumentListener };

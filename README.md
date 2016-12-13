@@ -46,6 +46,8 @@ MyComponent.looks = {
   base: {
     // You can also group properties by specifying the width first
     200: {
+      // Use your favorite shorthand properties. Superficial will interpolate
+      // the values individually
       margin: '0px auto',
       padding: '16px 12px 4px',
     },
@@ -74,6 +76,36 @@ The resulting HTML looks like this:
   Let's Be Superficial!
 </h1>
 ```
+
+## Where does the width come from?
+
+Writing style rules in terms of the component width is useful, but how do you
+determine the width to begin with?
+
+You may wish to compute widths inside a parent component, as in the following example:
+
+```jsx
+function SideBySide(props) {
+  return (
+    <MyComponent width={props.width / 2} />
+    <MyComponent width={props.width / 2} />
+  );
+}
+```
+
+Superficial also provides a small DocumentListener component that will automatically pass down the browser width to its children (and listen for any resizing). You can use it like this:
+
+```jsx
+ReactDOM.render(
+  <DocumentListener>
+    <App />
+  </DocumentListener>
+  document.getElementById('root')
+);
+```
+
+Now your App component will have a width property that matches the clientWidth
+of the browser page.
 
 ## Contributing
 
