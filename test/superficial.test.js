@@ -94,3 +94,15 @@ test('Enhanced component uses displayName where possible', (assert) => {
   assert.ok(wrapper.find('FooComponent').length);
   assert.end();
 });
+
+test('Components can refer to undefined looks without crashing', (assert) => {
+  class FooComponent extends React.Component {
+    render() { return <div looks={this.looks.foo} />; }
+  }
+  const BarComponent = (_, looks) => <div looks={looks.bar} />;
+  let Component = superficial(FooComponent);
+  shallow(<Component />);
+  Component = superficial(BarComponent);
+  shallow(<Component />);
+  assert.end();
+});

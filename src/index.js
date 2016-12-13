@@ -19,11 +19,9 @@ function Superficial(component) {
 
   class Enhanced extends component {
     render() {
-      if (this.props.__looksOverride) {
-        this.looks =
-          Object.assign({}, component.looks, this.props.__looksOverride);
-      }
-      return wrapRendered(super.render(), this.props.width);
+      const { __looksOverride, width } = this.props;
+      this.looks = Object.assign({}, component.looks, __looksOverride);
+      return wrapRendered(super.render(), width);
     }
   }
   Enhanced.propTypes = { width: React.PropTypes.number };
