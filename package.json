@@ -17,8 +17,8 @@
     "lint": "eslint src test"
   },
   "license": "MIT",
-  "dependencies": {
-    "react": "^15.4.1"
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0-0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -32,6 +32,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
+    "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
     "react-dom": "^15.4.1",
     "tap-min": "^1.1.0",
