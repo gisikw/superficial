@@ -1,5 +1,5 @@
 import DocumentListener from './DocumentListener';
-import interpolate from './interpolate';
+import interpolate, { expandLookRules } from './interpolate';
 import wrapComponent from './wrapComponent';
 
 function superficial(component) {
@@ -7,4 +7,4 @@ function superficial(component) {
 }
 
 export default superficial;
-export { interpolate, DocumentListener };
+export { interpolate, expandLookRules, DocumentListener };

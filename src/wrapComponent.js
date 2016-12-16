@@ -12,6 +12,7 @@ export default (component) => {
         props.width,
       );
     wrapper.displayName = component.displayName || component.name;
+    wrapper.looks = wrapper.prototype.looks = component.looks;
     return wrapper;
   }
 

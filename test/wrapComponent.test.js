@@ -106,3 +106,14 @@ test('Components can refer to undefined looks without crashing', (assert) => {
   shallow(<Component />);
   assert.end();
 });
+
+test('Enhanced components expose underlying looks', (assert) => {
+  // eslint-disable-next-line react/prefer-stateless-function
+  class FooComponent extends React.Component { render() { return <div />; } }
+  const BarComponent = () => <div />;
+  FooComponent.looks = 'foo';
+  BarComponent.looks = 'bar';
+  assert.equal(superficial(FooComponent).looks, 'foo');
+  assert.equal(superficial(BarComponent).looks, 'bar');
+  assert.end();
+});
