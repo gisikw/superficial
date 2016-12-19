@@ -72,10 +72,10 @@ test('interpolate supports CSS shorthand properties', (assert) => {
 
 test('interpolate allows keyword values in CSS shorthand', (assert) => {
   const style = interpolate({
-    0: { margin: '10px auto none inherit' },
-    2: { margin: '20px auto none inherit' },
+    0: { margin: '10px auto none' },
+    2: { margin: 'inherit 20px 13px' },
   });
-  assert.deepEqual(style(1), { margin: '15px auto none inherit' });
+  assert.deepEqual(style(1), { margin: 'inherit auto none' });
   assert.end();
 });
 
@@ -100,12 +100,43 @@ test('interpolate allows specifying breakpoints as properties', (assert) => {
   assert.end();
 });
 
-test('interpolate rounds fractional values to the nearest tenth', (assert) => {
+test('interpolate rounds values to the nearest hundredth', (assert) => {
   const style = interpolate({
     margin: { 0: '1px', 3: '2px' },
     padding: { 0: 1, 3: 2 },
   });
-  assert.deepEqual(style(1), { margin: '1.3px', padding: 1.3 });
+  assert.deepEqual(style(1), { margin: '1.33px', padding: 1.33 });
+  assert.end();
+});
+
+test('interpolate gets unitless bounds from other bound', (assert) => {
+  const style = interpolate({
+    margin: { 0: 0, 10: '10px' },
+    padding: { 0: '10em', 10: 2 },
+  });
+  assert.deepEqual(style(5), { margin: '5px', padding: '6em' });
+  assert.end();
+});
+
+test('interpolate handles comma-delineated units', (assert) => {
+  const style = interpolate({
+    color: { 0: 'rgba(0, 0, 0, 0.5)', 2: 'rgba(100, 100, 100, 0)' },
+  });
+  assert.deepEqual(style(1), { color: 'rgba(50, 50, 50, 0.25)' });
+  assert.end();
+});
+
+test('interpolate uses calc to resolve unit mismatches', (assert) => {
+  const style = interpolate({
+    margin: { 0: '5px', 2: '10em' },
+    padding: { 0: '-12%', 2: '4px' },
+    fontSize: { 0: '15vh', 2: '-20vw' },
+  });
+  assert.deepEqual(style(1), {
+    margin: 'calc(5px + (5em))',
+    padding: 'calc(-12% + (2px))',
+    fontSize: 'calc(15vh + (-10vw))',
+  });
   assert.end();
 });
 
