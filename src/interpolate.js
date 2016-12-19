@@ -3,10 +3,14 @@ const STATIC_VALUES = ['auto', 'none', 'inherit'];
 const SUPPORTED_UNITS = [
   'em', 'ex', 'rem', '%', 'px', 'vh', 'vw', 'vmin', 'vmax',
 ];
+
 const UNIT_PATTERN =
-  new RegExp(`(\\d+)(?:\\.\\d+)?(${
+  new RegExp(`-?(\\d+)(?:\\.\\d+)?(${
     SUPPORTED_UNITS.map(u => `(${u})`).join('|')
-  })?`, 'g');
+  })?`);
+const STATIC_PATTERN = STATIC_VALUES.map(v => `(${v})`).join('|');
+const VALUE_PATTERN =
+  new RegExp(`(${UNIT_PATTERN.source})|(${STATIC_PATTERN})`, 'g');
 const SINGLE_UNIT = new RegExp(`^${UNIT_PATTERN.source}$`);
 
 function interpolate(rules, width) {
@@ -42,12 +46,16 @@ function interpolateValues(a, b, x) {
   if (staticMatch) return staticMatch;
 
   // Append the appropriate unit to the interpolated plain numbers
-  const unit = units(a) || units(b);
-  if (unit) return interpolateValues(parseFloat(a), parseFloat(b), x) + unit;
+  const [aUnit, bUnit] = [a, b].map(units);
+  if (aUnit || bUnit) {
+    return (aUnit && bUnit && aUnit !== bUnit)
+      ? interpolateWithCalc(a, b, x)
+      : linearlyInterpolate(a, b, x) + (aUnit || bUnit);
+  }
 
   // Recurse on each supported value
-  const bMatches = b.match(UNIT_PATTERN);
-  return a.replace(UNIT_PATTERN,
+  const bMatches = b.match(VALUE_PATTERN);
+  return a.replace(VALUE_PATTERN,
                    m => interpolateValues(m, bMatches.shift(), x));
 }
 
@@ -70,6 +78,10 @@ export function expandLookRules(rules) {
 function linearlyInterpolate(a, b, x) {
   const aFloat = parseFloat(a);
   return round(aFloat + ((parseFloat(b) - aFloat) * x));
+}
+
+function interpolateWithCalc(a, b, x) {
+  return `calc(${a} + (${parseFloat(b) * x}${units(b)}))`;
 }
 
 function isNumeric(s) { return !isNaN(parseFloat(s)) && isFinite(s); }
