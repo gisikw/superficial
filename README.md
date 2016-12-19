@@ -79,11 +79,10 @@ The resulting HTML looks like this:
 
 ## Where does the width come from?
 
-Writing style rules in terms of the component width is useful, but how do you
-determine the width to begin with?
-
-You may wish to compute widths inside a parent component, as in the following
-example:
+Superficial's strength comes from the ability to express your component's look
+as a function of its own width (rather than the document width, as with media
+queries). Where this really shines is in the ability to determine the width
+value of child components, as in the following example:
 
 ```jsx
 function SideBySide(props) {
@@ -102,13 +101,68 @@ resizing). You can use it like this:
 ReactDOM.render(
   <DocumentListener>
     <App />
-  </DocumentListener>
+  </DocumentListener>,
   document.getElementById('root')
 );
 ```
 
 Now your `App` component will have a width property that matches the
 `clientWidth` of the browser page.
+
+## Special cases
+
+There are a few cases where the Superficial library makes some assumptions
+about what you intend, where otherwise things might be ambiguous. In the
+examples below, we show what the resulting value is exactly between two
+breakpoints:
+
+### CSS shorthand expressions
+```js
+between('5px auto', '15px auto')             // '10px auto'
+between('rgb(0, 0, 0)', 'rgb(50, 150, 250)') // 'rgb(25, 75, 125)'
+between('5px 20px 0', '10px 30px')           // ERROR!
+```
+
+Superficial will interpolate all the values in your string, allowing you to use
+shorthand CSS values. The library is agnostic to what format you use, and will
+simply pull out the values from each breakpoint. The format, however, needs to
+be the consistent for a given CSS property. Mixing different types of shortand
+(`margin: { 100: '15px auto', 400: '20px 5px 10px' }`) is not supported.
+
+### Mixing Unit and Unitless Values
+```js
+between(0, '15px') // '7.5px'
+between(5, '20em') // '12.5em'
+```
+
+If you use a value without a unit (for example, `border: 0`), and at a
+different width, provide a value *with* a unit, Superficial will assume it
+should use the unit throughout that range. So if the nearest neighbor is
+`border: '15px'`, pixel values will be used in-between.
+
+### Mixing different units
+
+```js
+between('15px', '-20%')  // 'calc(7.5px + (10%))'
+between('25vw', '42rem') // 'calc(12.5vw + (21rem))'
+```
+
+If you mix units, Superficial will try to handle this gracefully using the [CSS
+calc()](https://developer.mozilla.org/en-US/docs/Web/CSS/calc) function. Note
+that this may not be supported in legacy browsers, so we recommend you use the
+same units across breakpoints.
+
+### Using "static" values
+
+```js
+between('15px auto', '0px 5px') // '7.5px auto'
+between('15px', 'inherit')      // 'inherit'
+between('none', '30%')          // 'none'
+```
+
+Values like `auto`, `inherit`, and `none` don't really make much sense as part
+of a range of values. If you choose to use them, they will take precedence over
+their counterparts.
 
 ## Contributing
 
