@@ -81,7 +81,8 @@ function linearlyInterpolate(a, b, x) {
 }
 
 function interpolateWithCalc(a, b, x) {
-  return `calc(${a} + (${parseFloat(b) * x}${units(b)}))`;
+  return `calc(${parseFloat(a) * (1 - x)}${units(a)} + ` +
+         `(${parseFloat(b) * x}${units(b)}))`;
 }
 
 function isNumeric(s) { return !isNaN(parseFloat(s)) && isFinite(s); }

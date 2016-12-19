@@ -133,9 +133,9 @@ test('interpolate uses calc to resolve unit mismatches', (assert) => {
     fontSize: { 0: '15vh', 2: '-20vw' },
   });
   assert.deepEqual(style(1), {
-    margin: 'calc(5px + (5em))',
-    padding: 'calc(-12% + (2px))',
-    fontSize: 'calc(15vh + (-10vw))',
+    margin: 'calc(2.5px + (5em))',
+    padding: 'calc(-6% + (2px))',
+    fontSize: 'calc(7.5vh + (-10vw))',
   });
   assert.end();
 });
