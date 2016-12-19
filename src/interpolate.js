@@ -51,13 +51,13 @@ export function expandLookRules(rules) {
 
 function interpolateValues(a, b, x) {
   if (isNumeric(a) && isNumeric(b)) return round(a + ((b - a) * x));
-  const unitMatch = a.match(UNIT_PATTERN);
+  const unitMatch = `${a}`.match(UNIT_PATTERN);
   if (unitMatch) {
     const unit = unitMatch[2] || b.match(UNIT_PATTERN)[2] || '';
     const aFloat = parseFloat(a);
     return round(aFloat + ((parseFloat(b) - aFloat) * x)) + unit;
   }
-  if (STATIC_VALUES.indexOf(a) !== -1) return a;
+  if (STATIC_VALUES.includes(a)) return a;
   const bTokens = b.split(/\s+/);
   return a.split(/\s+/)
           .map((t, i) => interpolateValues(t, bTokens[i], x))

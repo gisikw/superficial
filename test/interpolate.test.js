@@ -109,6 +109,15 @@ test('interpolate rounds fractional values to the nearest tenth', (assert) => {
   assert.end();
 });
 
+test('interpolate gets unitless bounds from other bound', (assert) => {
+  const style = interpolate({
+    margin: { 0: 0, 10: '10px' },
+    padding: { 0: '10em', 10: 2 },
+  });
+  assert.deepEqual(style(5), { margin: '5px', padding: '6em' });
+  assert.end();
+});
+
 test('expandLookRules flattens grouped looks', (assert) => {
   const rules = {
     margin: { 100: 100, 200: 200 },
