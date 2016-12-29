@@ -117,3 +117,20 @@ test('Enhanced components expose underlying looks', (assert) => {
   assert.equal(superficial(BarComponent).looks, 'bar');
   assert.end();
 });
+
+test('Wrapped components extend the source propTypes', (assert) => {
+  // eslint-disable-next-line react/prefer-stateless-function
+  class FooComponent extends React.Component { render() { return <div />; } }
+  const BarComponent = () => <div />;
+  FooComponent.propTypes = { foo: true };
+  BarComponent.propTypes = { bar: true };
+  assert.deepEqual(superficial(FooComponent).propTypes, {
+    width: React.PropTypes.number,
+    foo: true,
+  });
+  assert.deepEqual(superficial(BarComponent).propTypes, {
+    width: React.PropTypes.number,
+    bar: true,
+  });
+  assert.end();
+});
