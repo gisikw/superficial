@@ -3,14 +3,16 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { DocumentListener } from '../src';
 
-test('DocumentListener passes document width to children', (assert) => {
-  global.document = { documentElement: { clientWidth: 123 } };
+test('DocumentListener passes document dimensions to children', (assert) => {
+  global.document =
+    { documentElement: { clientWidth: 123, clientHeight: 321 } };
   const wrapper = shallow(
     <DocumentListener>
       <div id="child" />
     </DocumentListener>,
   );
   assert.equal(wrapper.find('#child').prop('width'), 123);
+  assert.equal(wrapper.find('#child').prop('height'), 321);
   delete global.document;
   assert.end();
 });
