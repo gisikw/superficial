@@ -14,7 +14,9 @@ export default (component) => {
     wrapper.displayName = component.displayName || component.name;
     wrapper.looks = wrapper.prototype.looks = component.looks;
     wrapper.propTypes = component.propTypes || {};
-    wrapper.propTypes.width = React.PropTypes.number;
+    if (!wrapper.propTypes.width) {
+      wrapper.propTypes.width = React.PropTypes.number;
+    }
     return wrapper;
   }
 
@@ -26,7 +28,9 @@ export default (component) => {
     }
   }
   if (!Enhanced.propTypes) Enhanced.propTypes = {};
-  Enhanced.propTypes.width = React.PropTypes.number;
+  if (!Enhanced.propTypes.width) {
+    Enhanced.propTypes.width = React.PropTypes.number;
+  }
   Enhanced.prototype.looks = component.looks;
   Enhanced.displayName = component.displayName || component.name;
   return Enhanced;
