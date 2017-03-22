@@ -4,7 +4,7 @@ export default class DocumentListener extends React.Component {
   constructor(...args) {
     super(...args);
     this.update = this.update.bind(this);
-    this.state = { width: global.document.documentElement.clientWidth };
+    this.state = clientDimensions();
   }
 
   componentDidMount() {
@@ -16,7 +16,7 @@ export default class DocumentListener extends React.Component {
   }
 
   update() {
-    this.setState({ width: global.document.documentElement.clientWidth });
+    this.setState(clientDimensions());
   }
 
   render() {
@@ -31,6 +31,13 @@ export default class DocumentListener extends React.Component {
       </div>
     );
   }
+}
+
+function clientDimensions() {
+  return {
+    width: global.document.documentElement.clientWidth,
+    height: global.document.documentElement.clientHeight,
+  };
 }
 
 DocumentListener.propTypes = {
