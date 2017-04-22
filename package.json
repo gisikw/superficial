@@ -26,16 +26,19 @@
     "babel-preset-react": "^6.16.0",
     "babel-tap": "^5.0.0",
     "babel-tape-runner": "^2.0.1",
-    "enzyme": "^2.6.0",
+    "enzyme": "^2.8.2",
     "eslint": "^3.10.2",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
-    "react": "^15.4.1",
-    "react-addons-test-utils": "^15.4.1",
-    "react-dom": "^15.4.1",
+    "react": "^15.5.4",
+    "react-addons-test-utils": "^15.5.1",
+    "react-dom": "^15.5.4",
     "tap-min": "^1.1.0",
     "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.8"
   }
 }

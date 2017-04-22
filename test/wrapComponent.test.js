@@ -1,5 +1,6 @@
 import test from 'tape';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { shallow } from 'enzyme';
 import superficial from '../src';
 
@@ -69,21 +70,6 @@ test('Stateless functions are supported', (assert) => {
   assert.end();
 });
 
-test('React.createClass is supported', (assert) => {
-  // eslint-disable-next-line react/prefer-es6-class
-  const FooComponent = React.createClass({
-    render() { return <div><h1 looks={this.looks.foo}>Test</h1></div>; },
-  });
-  FooComponent.looks = { foo: {
-    0: { margin: '0 auto' },
-    2: { margin: '10px auto' },
-  } };
-  const Component = superficial(FooComponent);
-  const wrapper = shallow(<Component width={1} />);
-  assert.equal(wrapper.find('h1').prop('style').margin, '5px auto');
-  assert.end();
-});
-
 test('Enhanced component uses displayName where possible', (assert) => {
   // eslint-disable-next-line react/prefer-stateless-function
   class FooComponent extends React.Component {
@@ -125,11 +111,11 @@ test('Wrapped components extend the source propTypes', (assert) => {
   FooComponent.propTypes = { foo: true };
   BarComponent.propTypes = { bar: true };
   assert.deepEqual(superficial(FooComponent).propTypes, {
-    width: React.PropTypes.number,
+    width: PropTypes.number,
     foo: true,
   });
   assert.deepEqual(superficial(BarComponent).propTypes, {
-    width: React.PropTypes.number,
+    width: PropTypes.number,
     bar: true,
   });
   assert.end();

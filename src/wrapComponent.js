@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import wrapRendered from './wrapRendered';
 
 export default (component) => {
@@ -15,7 +16,7 @@ export default (component) => {
     wrapper.looks = wrapper.prototype.looks = component.looks;
     wrapper.propTypes = component.propTypes || {};
     if (!wrapper.propTypes.width) {
-      wrapper.propTypes.width = React.PropTypes.number;
+      wrapper.propTypes.width = PropTypes.number;
     }
     return wrapper;
   }
@@ -29,7 +30,7 @@ export default (component) => {
   }
   if (!Enhanced.propTypes) Enhanced.propTypes = {};
   if (!Enhanced.propTypes.width) {
-    Enhanced.propTypes.width = React.PropTypes.number;
+    Enhanced.propTypes.width = PropTypes.number;
   }
   Enhanced.prototype.looks = component.looks;
   Enhanced.displayName = component.displayName || component.name;
