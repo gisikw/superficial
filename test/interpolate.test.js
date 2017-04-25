@@ -70,6 +70,17 @@ test('interpolate supports CSS shorthand properties', (assert) => {
   assert.end();
 });
 
+test('interpolate supports CSS shorthand tweening with zero', (assert) => {
+  const style = interpolate({
+    0: { margin: 0 },
+    2: { margin: '10px 0 2em 5%' },
+    4: { margin: 0 },
+  });
+  assert.deepEqual(style(1), { margin: '5px 0 1em 2.5%' });
+  assert.deepEqual(style(3), { margin: '5px 0 1em 2.5%' });
+  assert.end();
+});
+
 test('interpolate allows keyword values in CSS shorthand', (assert) => {
   const style = interpolate({
     0: { margin: '10px auto none' },
