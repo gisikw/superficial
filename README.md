@@ -122,13 +122,15 @@ solely to illustrate the library's behavior in certain cases.
 between('5px auto', '15px auto')             // '10px auto'
 between('rgb(0, 0, 0)', 'rgb(50, 150, 250)') // 'rgb(25, 75, 125)'
 between('5px 20px 0', '10px 30px')           // ERROR!
+between('5px 20px 0', 0)                     // '2.5px 10px 0'
 ```
 
 Superficial will interpolate all the values in your string, allowing you to use
 shorthand CSS values. The library is agnostic to what format you use, and will
 simply pull out the values from each breakpoint. The format, however, needs to
 be the consistent for a given CSS property. Mixing different types of shortand
-(`margin: { 100: '15px auto', 400: '20px 5px 10px' }`) is not supported.
+(`margin: { 100: '15px auto', 400: '20px 5px 10px' }`) is not supported. The
+only exception is that `0` can be applied against an expression of any length.
 
 ### Single-Breakpoint expressions
 ```js

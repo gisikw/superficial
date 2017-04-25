@@ -60,9 +60,11 @@ function interpolateValues(a, b, x) {
   }
 
   // Recurse on each supported value
-  const bMatches = b.match(VALUE_PATTERN);
-  return a.replace(VALUE_PATTERN,
-                   m => interpolateValues(m, bMatches.shift(), x));
+  const aExpr = a === 0 ? zerosFor(b) : a;
+  const bExpr = b === 0 ? zerosFor(a) : b;
+  const bMatches = bExpr.match(VALUE_PATTERN);
+  return aExpr.replace(
+    VALUE_PATTERN, m => interpolateValues(m, bMatches.shift(), x));
 }
 
 // Split out grouped breakpoint rules into individual properties
@@ -99,6 +101,10 @@ function round(n) { return Math.round(n * PRECISION) / PRECISION; }
 
 function sortedBounds(obj) {
   return Object.keys(obj).map(k => parseInt(k, 10)).sort((a, b) => a - b);
+}
+
+function zerosFor(expr) {
+  return expr.match(VALUE_PATTERN).map(() => '0').join(' ');
 }
 
 export default node => (width = 0) => interpolate(expandLookRules(node), width);
