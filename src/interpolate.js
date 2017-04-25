@@ -1,46 +1,24 @@
-const PRECISION = 100;
-const STATIC_VALUES = ['auto', 'none', 'inherit'];
-const SUPPORTED_UNITS = [
-  'em', 'ex', 'rem', '%', 'px', 'vh', 'vw', 'vmin', 'vmax',
-];
-
-const UNIT_PATTERN =
-  new RegExp(`-?(\\d+)(?:\\.\\d+)?(${
-    SUPPORTED_UNITS.map(u => `(${u})`).join('|')
-  })?`);
-const STATIC_PATTERN = STATIC_VALUES.map(v => `(${v})`).join('|');
-const VALUE_PATTERN =
-  new RegExp(`(${UNIT_PATTERN.source})|(${STATIC_PATTERN})`, 'g');
-const SINGLE_UNIT = new RegExp(`^${UNIT_PATTERN.source}$`);
+import {
+  PRECISION, STATIC_VALUES, SINGLE_UNIT, VALUE_PATTERN,
+} from './constants';
 
 function interpolate(rules, width) {
-  return Object.assign({}, rules, ...Object.keys(rules).map((key) => {
-    // Do not override for non-object CSS values
-    if (typeof rules[key] !== 'object') return null;
-    const bounds = sortedBounds(rules[key]);
-
-    let values = rules[key];
-    if (bounds.length === 1) {
-      bounds.unshift(0);
-      values = Object.assign({ 0: 0 }, values);
+  return Object.keys(rules).reduce((acc, prop) => {
+    let value = rules[prop];
+    if (Array.isArray(value)) {
+      const [smallestWidth, smallestValue] = value[0];
+      const [largestWidth, largestValue] = value[value.length - 1];
+      if (width <= smallestWidth) value = smallestValue;
+      else if (width >= largestWidth) value = largestValue;
+      else {
+        const upper = value.find(([w]) => w > width);
+        const [lW, lV] = value[value.indexOf(upper) - 1];
+        const [uW, uV] = upper;
+        value = interpolateValues(lV, uV, (width - lW) / (uW - lW));
+      }
     }
-
-    // Use the smallest breakpoint value if below
-    if (width <= bounds[0]) return { [key]: values[bounds[0]] };
-
-    // Use the largest breakpoint value if above
-    const last = bounds[bounds.length - 1];
-    if (width >= last) return { [key]: values[last] };
-
-    // Interpolate values between the nearest neighbors
-    const upperBound = bounds.find(b => b > width);
-    const lowerBound = bounds[bounds.indexOf(upperBound) - 1];
-    return { [key]: interpolateValues(
-      values[lowerBound],
-      values[upperBound],
-      (width - lowerBound) / (upperBound - lowerBound),
-    ) };
-  }));
+    return Object.assign(acc, { [prop]: value });
+  }, {});
 }
 
 function interpolateValues(a, b, x) {
@@ -60,27 +38,9 @@ function interpolateValues(a, b, x) {
   }
 
   // Recurse on each supported value
-  const aExpr = a === 0 ? zerosFor(b) : a;
-  const bExpr = b === 0 ? zerosFor(a) : b;
-  const bMatches = bExpr.match(VALUE_PATTERN);
-  return aExpr.replace(
+  const bMatches = b.match(VALUE_PATTERN);
+  return a.replace(
     VALUE_PATTERN, m => interpolateValues(m, bMatches.shift(), x));
-}
-
-// Split out grouped breakpoint rules into individual properties
-export function expandLookRules(rules) {
-  return Object.keys(rules).reduce((o, key) => {
-    if (isNumeric(key)) {
-      return Object.assign({}, o,
-        ...Object.keys(rules[key]).map(prop => ({
-          [prop]: Object.assign({}, o[prop], {
-            [key]: rules[key][prop],
-          }),
-        })),
-      );
-    }
-    return Object.assign({}, o, { [key]: rules[key] });
-  }, {});
 }
 
 function linearlyInterpolate(a, b, x) {
@@ -99,12 +59,4 @@ function units(s) { return (`${s}`.match(SINGLE_UNIT) || [])[2]; }
 
 function round(n) { return Math.round(n * PRECISION) / PRECISION; }
 
-function sortedBounds(obj) {
-  return Object.keys(obj).map(k => parseInt(k, 10)).sort((a, b) => a - b);
-}
-
-function zerosFor(expr) {
-  return expr.match(VALUE_PATTERN).map(() => '0').join(' ');
-}
-
-export default node => (width = 0) => interpolate(expandLookRules(node), width);
+export default node => (width = 0) => interpolate(node, width);

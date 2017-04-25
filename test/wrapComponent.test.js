@@ -103,10 +103,14 @@ test('Enhanced components expose underlying looks', (assert) => {
   // eslint-disable-next-line react/prefer-stateless-function
   class FooComponent extends React.Component { render() { return <div />; } }
   const BarComponent = () => <div />;
-  FooComponent.looks = 'foo';
-  BarComponent.looks = 'bar';
-  assert.equal(superficial(FooComponent).looks, 'foo');
-  assert.equal(superficial(BarComponent).looks, 'bar');
+  FooComponent.looks = { foo: { height: { 50: '50px' } } };
+  BarComponent.looks = { bar: { height: { 50: '50px' } } };
+  assert.deepEqual(superficial(FooComponent).looks, {
+    foo: { height: [[0, '0'], [50, '50px']] },
+  });
+  assert.deepEqual(superficial(BarComponent).looks, {
+    bar: { height: [[0, '0'], [50, '50px']] },
+  });
   assert.end();
 });
 
