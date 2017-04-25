@@ -79,6 +79,16 @@ test('interpolate allows keyword values in CSS shorthand', (assert) => {
   assert.end();
 });
 
+test('interpolate assumes a 0 for single-breakpoint properties', (assert) => {
+  const style = interpolate({ 2: { margin: '2px' } });
+  assert.equal(style(2).margin, '2px');
+  assert.equal(style(0).margin, 0);
+  assert.equal(style(-5).margin, 0);
+  assert.equal(style(100).margin, '2px');
+  assert.equal(style(1).margin, '1px');
+  assert.end();
+});
+
 test('interpolate allows selective properties in breakpoints', (assert) => {
   const style = interpolate({
     0: { margin: '0px' },

@@ -19,19 +19,25 @@ function interpolate(rules, width) {
     if (typeof rules[key] !== 'object') return null;
     const bounds = sortedBounds(rules[key]);
 
+    let values = rules[key];
+    if (bounds.length === 1) {
+      bounds.unshift(0);
+      values = Object.assign({ 0: 0 }, values);
+    }
+
     // Use the smallest breakpoint value if below
-    if (width <= bounds[0]) return { [key]: rules[key][bounds[0]] };
+    if (width <= bounds[0]) return { [key]: values[bounds[0]] };
 
     // Use the largest breakpoint value if above
     const last = bounds[bounds.length - 1];
-    if (width >= last) return { [key]: rules[key][last] };
+    if (width >= last) return { [key]: values[last] };
 
     // Interpolate values between the nearest neighbors
     const upperBound = bounds.find(b => b > width);
     const lowerBound = bounds[bounds.indexOf(upperBound) - 1];
     return { [key]: interpolateValues(
-      rules[key][lowerBound],
-      rules[key][upperBound],
+      values[lowerBound],
+      values[upperBound],
       (width - lowerBound) / (upperBound - lowerBound),
     ) };
   }));
