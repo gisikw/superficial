@@ -106,10 +106,10 @@ test('Enhanced components expose underlying looks', (assert) => {
   FooComponent.looks = { foo: { height: { 50: '50px' } } };
   BarComponent.looks = { bar: { height: { 50: '50px' } } };
   assert.deepEqual(superficial(FooComponent).looks, {
-    foo: { height: [[0, '0'], [50, '50px']] }
+    foo: { height: [[0, '0'], [50, '50px']] },
   });
   assert.deepEqual(superficial(BarComponent).looks, {
-    bar: { height: [[0, '0'], [50, '50px']] }
+    bar: { height: [[0, '0'], [50, '50px']] },
   });
   assert.end();
 });

@@ -2,7 +2,7 @@ export const PRECISION = 100;
 export const STATIC_VALUES = ['auto', 'none', 'inherit'];
 export const SUPPORTED_UNITS = [
   'em', 'ex', 'rem', '%', 'px', 'vh', 'vw', 'vmin', 'vmax',
-  ];
+];
 
 export const UNIT_PATTERN =
   new RegExp(`-?(\\d+)(?:\\.\\d+)?(${

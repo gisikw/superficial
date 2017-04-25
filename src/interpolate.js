@@ -1,19 +1,19 @@
 import {
-  PRECISION, STATIC_VALUES, SINGLE_UNIT, VALUE_PATTERN
+  PRECISION, STATIC_VALUES, SINGLE_UNIT, VALUE_PATTERN,
 } from './constants';
 
 function interpolate(rules, width) {
   return Object.keys(rules).reduce((acc, prop) => {
     let value = rules[prop];
     if (Array.isArray(value)) {
-      const [ smallestWidth, smallestValue ] = value[0];
-      const [ largestWidth, largestValue ]  = value[value.length - 1];
+      const [smallestWidth, smallestValue] = value[0];
+      const [largestWidth, largestValue] = value[value.length - 1];
       if (width <= smallestWidth) value = smallestValue;
       else if (width >= largestWidth) value = largestValue;
       else {
         const upper = value.find(([w]) => w > width);
-        const [ lW, lV ] = value[value.indexOf(upper) - 1];
-        const [ uW, uV ] = upper;
+        const [lW, lV] = value[value.indexOf(upper) - 1];
+        const [uW, uV] = upper;
         value = interpolateValues(lV, uV, (width - lW) / (uW - lW));
       }
     }
@@ -58,9 +58,5 @@ function isNumeric(s) { return !isNaN(parseFloat(s)) && isFinite(s); }
 function units(s) { return (`${s}`.match(SINGLE_UNIT) || [])[2]; }
 
 function round(n) { return Math.round(n * PRECISION) / PRECISION; }
-
-function sortedBounds(obj) {
-  return Object.keys(obj).map(k => parseInt(k, 10)).sort((a, b) => a - b);
-}
 
 export default node => (width = 0) => interpolate(node, width);

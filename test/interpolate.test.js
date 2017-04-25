@@ -1,6 +1,5 @@
 import test from 'tape';
 import { interpolate } from '../src';
-import { expandLookRules } from '../src/interpolate';
 
 test('interpolate leaves plain object alone', (assert) => {
   const styles = { color: '#fff' };
@@ -49,7 +48,7 @@ test('interpolate supports values with units', (assert) => {
 
 test('interpolate supports CSS shorthand properties', (assert) => {
   const style = interpolate({
-    margin: [[0, '0 10px 2em 5%'], [2, '10px 0px 1em 0']]
+    margin: [[0, '0 10px 2em 5%'], [2, '10px 0px 1em 0']],
   });
   assert.deepEqual(style(1), { margin: '5px 5px 1.5em 2.5%' });
   assert.end();

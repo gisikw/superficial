@@ -18,7 +18,7 @@ function sanitize(rule) {
     ? nonZero[1].match(VALUE_PATTERN).map(() => '0').join(' ')
     : 0;
   result = result.map(([size, value]) =>
-    [parseInt(size, 10), isZero(value) ? zeros : value ]);
+    [parseInt(size, 10), isZero(value) ? zeros : value]);
   result = result.sort((a, b) => parseInt(a[0], 10) > parseInt(b[0], 10));
   return result;
 }
