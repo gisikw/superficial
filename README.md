@@ -114,7 +114,8 @@ Now your `App` component will have a width property that matches the
 There are a few cases where the Superficial library makes some assumptions
 about what you intend, where otherwise things might be ambiguous. In the
 examples below, we show what the resulting value is exactly between two
-breakpoints:
+breakpoints. Note that the `between` function does not exist; it is provided
+solely to illustrate the library's behavior in certain cases.
 
 ### CSS shorthand expressions
 ```js
@@ -129,7 +130,20 @@ simply pull out the values from each breakpoint. The format, however, needs to
 be the consistent for a given CSS property. Mixing different types of shortand
 (`margin: { 100: '15px auto', 400: '20px 5px 10px' }`) is not supported.
 
-### Mixing Unit and Unitless Values
+### Single-Breakpoint expressions
+```js
+height: { 500: '100px', 0: 0 }; // Standard definition
+height: { 500: '100px' };       // Syntactic shortcut
+```
+
+Frequently, it may be valuable to express a single breakpoint, assuming a
+linear responsiveness for values below. If a property is specified for a given
+width, it can be assumed that it should scale proportionally below that width.
+If a single breakpoint is provided, Superficial will treat the expression as
+though there were an additional breakpoint at `0` width for which the property
+value is 0.
+
+### Mixing unit and unitless values
 ```js
 between(0, '15px') // '7.5px'
 between(5, '20em') // '12.5em'
