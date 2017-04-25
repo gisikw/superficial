@@ -7,4 +7,4 @@ rules:
   no-use-before-define: [2, { functions: false }]
   max-len: [2, 80]
   react/jsx-filename-extension: 0
-  no-underscore-dangle: [2, { allow: [ __looksOverride ]}]
+  no-param-reassign: [2, { props: false }]

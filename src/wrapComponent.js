@@ -3,14 +3,9 @@ import wrapRendered from './wrapRendered';
 
 export default (component) => {
   if (isStateless(component)) {
+    if (!component.looks) component.looks = {};
     const wrapper = props =>
-      wrapRendered(
-        component(
-          props,
-          Object.assign({}, component.looks, props.__looksOverride),
-        ),
-        props.width,
-      );
+      wrapRendered(component(props), props.width);
     wrapper.displayName = component.displayName || component.name;
     wrapper.looks = wrapper.prototype.looks = component.looks;
     wrapper.propTypes = component.propTypes || {};
@@ -22,8 +17,8 @@ export default (component) => {
 
   class Enhanced extends component {
     render() {
-      const { __looksOverride, width } = this.props;
-      this.looks = Object.assign({}, component.looks, __looksOverride);
+      const { width } = this.props;
+      this.looks = component.looks || {};
       return wrapRendered(super.render(), width);
     }
   }

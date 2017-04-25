@@ -59,7 +59,13 @@ test('Components support interpolated styles', (assert) => {
 });
 
 test('Stateless functions are supported', (assert) => {
-  const FooComponent = (_, looks) => <div><h1 looks={looks.foo}>Test</h1></div>;
+  function FooComponent() {
+    return (
+      <div>
+        <h1 looks={FooComponent.looks.foo}>Test</h1>
+      </div>
+    );
+  }
   FooComponent.looks = { foo: {
     0: { margin: '0 auto' },
     2: { margin: '10px auto' },
@@ -85,7 +91,7 @@ test('Components can refer to undefined looks without crashing', (assert) => {
   class FooComponent extends React.Component {
     render() { return <div looks={this.looks.foo} />; }
   }
-  const BarComponent = (_, looks) => <div looks={looks.bar} />;
+  const BarComponent = () => <div looks={BarComponent.looks.bar} />;
   let Component = superficial(FooComponent);
   shallow(<Component />);
   Component = superficial(BarComponent);
