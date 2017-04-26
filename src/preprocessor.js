@@ -15,7 +15,7 @@ function sanitize(rule) {
   if (result.length === 1) result = result.concat([[0, 0]]);
   const nonZero = result.find(v => !isZero(v[1]));
   const zeros = nonZero
-    ? nonZero[1].match(VALUE_PATTERN).map(() => '0').join(' ')
+    ? `${nonZero[1]}`.match(VALUE_PATTERN).map(() => '0').join(' ')
     : 0;
   result = result.map(([size, value]) =>
     [parseInt(size, 10), isZero(value) ? zeros : value]);
